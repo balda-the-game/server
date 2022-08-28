@@ -4,7 +4,8 @@ import express from "express";
 const app = express();
 
 consign()
-  .include("models")
+  .include("libs/config.js")
+  .include("db.js")
   .include("libs/middlewares.js")
   .include("routes")
   .include("libs/boot.js")
