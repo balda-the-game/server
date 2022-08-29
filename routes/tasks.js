@@ -2,16 +2,18 @@ module.exports = app => {
   const Tasks = app.db.models.Tasks;
 
   app.route("/tasks")
+    .all(app.auth.authenticate())
     .get((req, res) => {
-      // "/tasks": List of tasks
-      Tasks.findAll({})
+      Tasks.findAll({
+        where: { user_id: req.user.id }
+      })
         .then(result => res.json(result))
         .catch(error => {
           res.status(412).json({ msg: error.message });
         });
     })
     .post((req, res) => {
-      // "/tasks": Save new task
+      req.body.user_id = req.user.id;
       Tasks.create(req.body)
         .then(result => res.json(result))
         .catch(error => {
@@ -20,28 +22,41 @@ module.exports = app => {
     });
 
   app.route("/tasks/:id")
+    .all(app.auth.authenticate())
     .get((req, res) => {
-      // "/tasks/1": Get a task with id 1
-      Tasks.findOne({ where: req.params })
+      Tasks.findOne({
+        where: {
+          id: req.params.id,
+          user_id: req.user.id
+        }
+      })
         .then(result => {
-          if (result) res.json(result);
-          else res.sendStatus(404);
+          if (result) return res.json(result);
+          return res.sendStatus(404);
         })
         .catch(error => {
           res.status(412).json({ msg: error.message });
         });
     })
-    .post((req, res) => {
-      // "/tasks/2": Update task with id 2
-      Tasks.update(req.body, { where: req.params })
+    .put((req, res) => {
+      Tasks.update(req.body, {
+        where: {
+          id: req.params.id,
+          user_id: req.user.id
+        }
+      })
         .then(() => res.sendStatus(204))
         .catch(error => {
           res.status(412).json({ msg: error.message });
         });
     })
     .delete((req, res) => {
-      // "/tasks/3": Delete task with id 3
-      Tasks.destroy({ where: req.params })
+      Tasks.destroy({
+        where: {
+          id: req.params.id,
+          user_id: req.user.id
+        }
+      })
         .then(() => res.sendStatus(204))
         .catch(error => {
           res.status(412).json({ msg: error.message });
