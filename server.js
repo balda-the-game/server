@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
-import consign from "consign";
-import express from "express";
+const dotenv = require("dotenv");
+const consign = require("consign");
+const express = require("express");
 
 dotenv.config({path: __dirname + "/.env.local"});
 const app = express();
@@ -13,3 +13,6 @@ consign()
   .include("routes")
   .include("libs/boot.js")
   .into(app);
+
+
+module.exports = app;

@@ -1,4 +1,4 @@
-import jwt from "jwt-simple";
+const jwt = require("jwt-simple");
 
 module.exports = app => {
   const cfg = app.libs.config;

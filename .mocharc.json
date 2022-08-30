@@ -1,0 +1,6 @@
+{
+  "reporter": "spec",
+  "timeout": "60000",
+  "watch-files": ["test/**/*.js"],
+  "require": "test/hooks.js"
+}
