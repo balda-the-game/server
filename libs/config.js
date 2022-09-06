@@ -1,3 +1,5 @@
+const logger = require("./logger");
+
 module.exports = app => {
   if (process.env.NODE_ENV == "dev")
     return {                            // Dev env config
@@ -7,6 +9,9 @@ module.exports = app => {
       params: {
         dialect: "sqlite",
         storage: "balda.sqlite",
+        logging: (sql) => {
+          logger.info(`[${new Date()}] ${sql}`);
+        },
         define: {
           underscore: true
         }
