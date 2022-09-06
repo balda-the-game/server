@@ -24,29 +24,34 @@ module.exports = app => {
           res.status(412).json({ msg: error.message });
         });
     });
-  app.route("/:lobby_guid")
+  app.route("/lobbies/:id")
     // Every request should be authenticated
     .all(app.auth.authenticate())
     // Try to connect to lobby with uuid and key
     .get((req, res) => {
-      const query = {
-        where: {
-          id: req.params.id
-        }
-      };
-      if (req.params.key) {
-        where.key = req.params.key
-      };
-      Lobbies.findOne(query)
+      Lobbies.findOne({
+        attributes: ['key', 'free_slots'],
+        where: { id: req.params.id }
+      })
         .then(result => {
-          if (result)
-            return res.json(result);
+          if (result) {
+            if (result.free_slots != 0) {
+              if (req.body.key == result.key || result.key == null) {
+                Lobbies.update(
+                  { free_slots: result.free_slots - 1 },
+                  { where: { id: req.params.id } }
+                );
+                return res.json({ msg: "Connected" });
+              }
+              else return res.status(412).json({ msg: "Wrong lobby key" });
+            }
+            else return res.status(412).json({ msg: "Unable to connect. Lobby is full" });
+          }
           else
             // Lobby not found
-            return res.sendStatus(401);
+            return res.status(412).json({ msg: "Wrong lobby uuid" });
         })
         .catch(error => {
-          // Aunouthorized
           res.status(412).json({ msg: error.message });
         });
     })
