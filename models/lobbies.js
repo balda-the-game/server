@@ -42,7 +42,10 @@ module.exports = (sequelize, DataTypes) => {
     });
   Lobbies.beforeCreate(async (lobby, _) => {
     // After lobby created all the slots is free
+    if (typeof lobby.slots != "number")
+      lobby.slots = 2;
     lobby.free_slots = lobby.slots;
+    // FIXME: it is possible to pass string as value in 'slots' field. Temporary check it here
   })
   return Lobbies;
 };

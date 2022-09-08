@@ -99,6 +99,20 @@ describe("Routes: Lobbies", () => {
           .expect(412)
           .end((err, res) => done(err));
       });
+      it("throws an error when 'slots' key is < 2", done => {
+        request.post("/lobbies")
+          .set("Authorization", `JWT ${token}`)
+          .send({ title: "title", slots: 1 })
+          .expect(412)
+          .end((err, res) => done(err));
+      });
+      it("throws an error when 'slots' key is > 5", done => {
+        request.post("/lobbies")
+          .set("Authorization", `JWT ${token}`)
+          .send({ title: "title", slots: 6 })
+          .expect(412)
+          .end((err, res) => done(err));
+      });
     });
   });
   describe("GET /lobbies/:id", () => {

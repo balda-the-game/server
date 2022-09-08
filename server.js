@@ -10,6 +10,7 @@ consign()
   .include("db.js")
   .include("auth.js")
   .include("libs/middlewares.js")
+  .include("controllers")
   .include("routes")
   .include("libs/boot.js")
   .into(app);
