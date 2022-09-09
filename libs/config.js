@@ -16,6 +16,13 @@ module.exports = app => {
           underscore: true
         }
       },
+      socketIoAdminAuth: {
+        auth: {
+          type: "basic",
+          username: process.env.SOCKETIO_ADMIN_USERNAME,
+          password: process.env.SOCKETIO_ADMIN_PASSWORDHASH
+        }
+      },
       jwtSecret: process.env.JWT_SECRET,
       jwtSession: { session: false }
     }
@@ -45,6 +52,13 @@ module.exports = app => {
         storage: "balda.sqlite",
         define: {
           underscore: true
+        }
+      },
+      socketIoAdminAuth: {
+        auth: {
+          type: "basic",
+          username: process.env.SOCKETIO_ADMIN_USERNAME,
+          password: process.env.SOCKETIO_ADMIN_PASSWORDHASH
         }
       },
       jwtSecret: process.env.JWT_SECRET,

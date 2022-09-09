@@ -2,8 +2,9 @@ const dotenv = require("dotenv");
 const consign = require("consign");
 const express = require("express");
 
-dotenv.config({path: __dirname + "/.env.local"});
 const app = express();
+
+dotenv.config({ path: __dirname + "/.env.local" });
 
 consign()
   .include("libs/config.js")

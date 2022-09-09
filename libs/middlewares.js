@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const logger = require("./logger");
 const compression = require("compression");
 const helmet = require("helmet");
+const express = require("express");
 
 module.exports = app => {
   app.set("port", 3000);
@@ -17,7 +18,11 @@ module.exports = app => {
   }))
   app.use(helmet());
   app.use(cors({
-    origin: ["https://localhost:3001"],
+    origin: [
+      "https://localhost:3001", // For API doc
+      "https://admin.socket.io"
+    ],
+    credentials: false,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
   }));
@@ -28,5 +33,5 @@ module.exports = app => {
     delete req.body.id;
     next();
   });
-  // app.use(express.static("puplic"));
+  app.use(express.static("public"));
 }
