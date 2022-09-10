@@ -7,7 +7,12 @@
   "license": "MIT",
   "scripts": {
     "server": "babel-node server.js",
-    "test": "NODE_ENV=test mocha test/**/*.js"
+    "test": "NODE_ENV=test mocha test/**/*.js",
+    "test:index": "NODE_ENV=test mocha test/routes/index.test.js",
+    "test:users": "NODE_ENV=test mocha test/routes/users.test.js",
+    "test:tasks": "NODE_ENV=test mocha test/routes/tasks.test.js",
+    "test:lobbies": "NODE_ENV=test mocha test/routes/lobbies.test.js",
+    "test:token": "NODE_ENV=test mocha test/routes/token.test.js",
   },
   "dependencies": {
     "@socket.io/admin-ui": "^0.4.0",

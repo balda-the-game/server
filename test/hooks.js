@@ -10,9 +10,3 @@ global.app = app;
 global.should = should;
 global.expect = expect;
 global.request = request;
-
-// exports.mochaHooks = {
-//   beforeEach(done) {
-//     done();
-//   }
-// };

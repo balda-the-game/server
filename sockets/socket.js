@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const { instrument } = require("@socket.io/admin-ui");
 
-module.exports.createSocket = (httpServer, authConfig) => {
+module.exports.createSocket = (httpServer, authConfig = { auth: false }) => {
 
   const io = new Server(httpServer, {
     cors: {
