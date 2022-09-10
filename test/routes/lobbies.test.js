@@ -127,9 +127,9 @@ describe("Routes: Lobbies", () => {
           });
       });
       it("Connect to the free key protected lobby with valid key", done => {
-        request.get(`/lobbies/${fakeLobby.id}`)
+        request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
           .set("Authorization", `JWT ${token}`)
-          .set("key", "1234")
+          .send({key: "1234"})
           .expect(200)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Connected")
@@ -141,7 +141,7 @@ describe("Routes: Lobbies", () => {
       it("throws an error when the key is wrong", done => {
         request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
           .set("Authorization", `JWT ${token}`)
-          .set("key", "wrong_key")
+          .send({key: "wrong_pass"})
           .expect(412)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Wrong lobby key");
