@@ -20,6 +20,7 @@ module.exports = app => {
   app.use(cors({
     origin: [
       "https://localhost:3001", // For API doc
+      "https://localhost:8080", // For client frontend
       "https://admin.socket.io"
     ],
     credentials: false,

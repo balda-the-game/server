@@ -26,7 +26,9 @@ describe("Routes: Lobbies", () => {
                 id: "1b69ed8c-2c3c-41af-85ca-bf1fdb8daf3e",
                 title: "Free 4 players game",
                 slots: 4,
-                free_slots: 4
+                free_slots: 4,
+                dimention: 5,
+                language: "RU"
               },
               // Needs a correct pass to connect
               {
@@ -34,14 +36,18 @@ describe("Routes: Lobbies", () => {
                 title: "Pass locked 2 players game",
                 key: "1234",
                 slots: 2,
-                free_slots: 2
+                free_slots: 2,
+                dimention: 5,
+                language: "RU"
               },
               // Unable to connect because free_slots = 0
               {
                 id: "687599d0-0ef9-49ca-bb15-eb1a2fff33d7",
                 title: "Full no pass 5 players lobby",
                 slots: 5,
-                free_slots: 0
+                free_slots: 0,
+                dimention: 5,
+                language: "RU"
               },
             ]
           ))
@@ -73,13 +79,15 @@ describe("Routes: Lobbies", () => {
       it("Create new lobby with 4 slots and key '2323'", done => {
         request.post("/lobbies")
           .set("Authorization", `JWT ${token}`)
-          .send({ title: "New lobby", slots: 4, key: "2323" })
+          .send({ title: "New lobby", dimention: 5, language: "en_US", slots: 4, key: "2323" })
           .expect(200)
           .end((err, res) => {
             expect(res.body.title).to.be.eql("New lobby");
             expect(res.body.key).to.be.eql("2323");
             expect(res.body.slots).to.be.eql(4);
             expect(res.body.free_slots).to.be.eql(4);
+            expect(res.body.dimention).to.be.eql(5);
+            expect(res.body.language).to.be.eql("en_US");
             done(err);
           });
       });
@@ -88,28 +96,42 @@ describe("Routes: Lobbies", () => {
       it("throws an error when no 'title' key was set", done => {
         request.post("/lobbies")
           .set("Authorization", `JWT ${token}`)
-          .send({ slots: 2, key: "2323" })
+          .send({ slots: 2, key: "2323", dimention: 5, language: "en_US" })
+          .expect(412)
+          .end((err, res) => done(err));
+      });
+      it("throws an error when no 'language' key was set", done => {
+        request.post("/lobbies")
+          .set("Authorization", `JWT ${token}`)
+          .send({ title: "New lobby", slots: 2, dimention: 5 })
+          .expect(412)
+          .end((err, res) => done(err));
+      });
+      it("throws an error when 'language' key is not a language code (en_US, ru_RU)", done => {
+        request.post("/lobbies")
+          .set("Authorization", `JWT ${token}`)
+          .send({ title: "New lobby", key: "2323", slots: 1, dimention: 5, language: "russian" })
           .expect(412)
           .end((err, res) => done(err));
       });
       it("throws an error when no 'slots' key was set", done => {
         request.post("/lobbies")
           .set("Authorization", `JWT ${token}`)
-          .send({ title: "New lobby", key: "2323" })
+          .send({ title: "New lobby", key: "2323", dimention: 5, language: "en_US" })
           .expect(412)
           .end((err, res) => done(err));
       });
       it("throws an error when 'slots' key is < 2", done => {
         request.post("/lobbies")
           .set("Authorization", `JWT ${token}`)
-          .send({ title: "title", slots: 1 })
+          .send({ title: "New lobby", key: "2323", slots: 1, dimention: 5, language: "en_US" })
           .expect(412)
           .end((err, res) => done(err));
       });
       it("throws an error when 'slots' key is > 5", done => {
         request.post("/lobbies")
           .set("Authorization", `JWT ${token}`)
-          .send({ title: "title", slots: 6 })
+          .send({ title: "New lobby", key: "2323", slots: 6, dimention: 5, language: "en_US" })
           .expect(412)
           .end((err, res) => done(err));
       });
@@ -129,7 +151,7 @@ describe("Routes: Lobbies", () => {
       it("Connect to the free key protected lobby with valid key", done => {
         request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
           .set("Authorization", `JWT ${token}`)
-          .send({key: "1234"})
+          .send({ key: "1234" })
           .expect(200)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Connected")
@@ -141,7 +163,7 @@ describe("Routes: Lobbies", () => {
       it("throws an error when the key is wrong", done => {
         request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
           .set("Authorization", `JWT ${token}`)
-          .send({key: "wrong_pass"})
+          .send({ key: "wrong_pass" })
           .expect(412)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Wrong lobby key");

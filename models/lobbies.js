@@ -19,6 +19,25 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true
         }
       },
+      language: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          validator(value) {
+            if (!["en_US", "ru_RU"].includes(value))
+              throw new Error("String is note a language code. Example: en_US, ru_RU");
+          }
+        }
+      },
+      dimention: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 5,
+          max: 8,
+        }
+      },
       slots: {
         type: DataTypes.INTEGER,
         allowNull: false,

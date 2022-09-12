@@ -6,7 +6,7 @@ module.exports = app => {
   // TODO: get list of lobbies with at least 1 free slot
   lobbiesController.onGetAllLobbies = async (req, res) => {
     Lobbies.findAll({
-      attributes: ['id', 'title', 'slots', 'free_slots'],
+      attributes: ['id', 'title', 'dimention', 'slots', 'free_slots', 'language'],
       where: {}
     })
       .then(result => res.json(result))
