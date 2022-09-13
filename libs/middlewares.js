@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const logger = require("./logger");
@@ -23,12 +22,13 @@ module.exports = app => {
       "https://localhost:8080", // For client frontend
       "https://admin.socket.io"
     ],
-    credentials: false,
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
   }));
   app.use(compression());
-  app.use(bodyParser.json());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(app.auth.initialize());
   app.use((req, res, next) => {
     delete req.body.id;

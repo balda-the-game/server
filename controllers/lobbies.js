@@ -6,7 +6,7 @@ module.exports = app => {
   // TODO: get list of lobbies with at least 1 free slot
   lobbiesController.onGetAllLobbies = async (req, res) => {
     Lobbies.findAll({
-      attributes: ['id', 'title', 'dimention', 'slots', 'free_slots', 'language'],
+      attributes: ['id', 'title', 'dimention', 'slots', 'free_slots', 'language', 'locked'],
       where: {}
     })
       .then(result => res.json(result))
@@ -26,6 +26,7 @@ module.exports = app => {
   };
   // Try to connect to lobby with uuid and key
   lobbiesController.onConnect = async (req, res) => {
+    // FIXME: EMPTY REQ {} from forntend but not from postman
     Lobbies.findOne({
       attributes: ['key', 'free_slots'],
       where: { id: req.params.id }
@@ -33,7 +34,7 @@ module.exports = app => {
       .then(result => {
         if (result) {
           if (result.free_slots != 0) {
-            if (req.body.key == result.key || result.key == null) {
+            if (req.query.key == result.key || result.locked == false) {
               Lobbies.update(
                 { free_slots: result.free_slots - 1 },
                 { where: { id: req.params.id } }

@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
           max: 5,
         }
       },
+      locked: {
+        type: DataTypes.BOOLEAN,
+        default: false,
+      },
     },
     {
       classMethods: {
@@ -64,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     if (typeof lobby.slots != "number")
       lobby.slots = 2;
     lobby.free_slots = lobby.slots;
+    lobby.locked = lobby.key != "";
     // FIXME: it is possible to pass string as value in 'slots' field. Temporary check it here
   })
   return Lobbies;

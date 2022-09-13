@@ -33,7 +33,7 @@ describe("Routes: Lobbies", () => {
               // Needs a correct pass to connect
               {
                 id: "357d24bc-38a9-4da1-922a-d9f887634491",
-                title: "Pass locked 2 players game",
+                title: "Free pass locked 2 players game",
                 key: "1234",
                 slots: 2,
                 free_slots: 2,
@@ -67,7 +67,7 @@ describe("Routes: Lobbies", () => {
           .end((err, res) => {
             expect(res.body).to.have.length(3);
             expect(res.body[0].title).to.be.eql("Free 4 players game");
-            expect(res.body[1].title).to.be.eql("Pass locked 2 players game");
+            expect(res.body[1].title).to.be.eql("Free pass locked 2 players game");
             expect(res.body[2].title).to.be.eql("Full no pass 5 players lobby");
             done(err);
           });
@@ -84,6 +84,7 @@ describe("Routes: Lobbies", () => {
           .end((err, res) => {
             expect(res.body.title).to.be.eql("New lobby");
             expect(res.body.key).to.be.eql("2323");
+            expect(res.body.locked).to.be.eql(true);
             expect(res.body.slots).to.be.eql(4);
             expect(res.body.free_slots).to.be.eql(4);
             expect(res.body.dimention).to.be.eql(5);
@@ -150,8 +151,8 @@ describe("Routes: Lobbies", () => {
       });
       it("Connect to the free key protected lobby with valid key", done => {
         request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
+          .query({ key: "1234"})
           .set("Authorization", `JWT ${token}`)
-          .send({ key: "1234" })
           .expect(200)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Connected")
@@ -162,8 +163,8 @@ describe("Routes: Lobbies", () => {
     describe("status 412", () => {
       it("throws an error when the key is wrong", done => {
         request.get(`/lobbies/357d24bc-38a9-4da1-922a-d9f887634491`)
+          .query({ key: "wrongkey"})
           .set("Authorization", `JWT ${token}`)
-          .send({ key: "wrong_pass" })
           .expect(412)
           .end((err, res) => {
             expect(res.body.msg).to.eql("Wrong lobby key");
